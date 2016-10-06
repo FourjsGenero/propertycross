@@ -1,0 +1,2 @@
+dbi.default.driver = "dbmsqt"
+dbi.database.propertycross.source = "propertycross.db"
