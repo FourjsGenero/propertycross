@@ -39,11 +39,7 @@ define is_favourite boolean
     
     call d.setActionActive("favourite_remove", is_favourite)
     call d.setActionActive("favourite_add", NOT is_favourite)
-    
 end function
-
-
-
 
 
 
@@ -60,23 +56,25 @@ define l_pos integer
     return m_listing.title
 end function
 
+
+
 private function bed_and_bath()
 
     case
         when m_listing.bedroom_number > 1 and m_listing.bathroom_number > 1 
-            return sfmt("%1 bedrooms, %2 bathrooms", m_listing.bedroom_number, m_listing.bathroom_number)
+            return sfmt("%1 bedrooms, %2 bathrooms", m_listing.bedroom_number using "<<", m_listing.bathroom_number  using "<<")
         when m_listing.bedroom_number > 1 and m_listing.bathroom_number =1  
-            return sfmt("%1 bedrooms, %2 bathroom", m_listing.bedroom_number, m_listing.bathroom_number)
+            return sfmt("%1 bedrooms, %2 bathroom", m_listing.bedroom_number  using "<<", m_listing.bathroom_number  using "<<")
          when m_listing.bedroom_number = 1 and m_listing.bathroom_number > 1  
-            return sfmt("%1 bed, %2 bathrooms", m_listing.bedroom_number, m_listing.bathroom_number)
+            return sfmt("%1 bed, %2 bathrooms", m_listing.bedroom_number  using "<<", m_listing.bathroom_number  using "<<")
         when m_listing.bedroom_number = 1 and m_listing.bathroom_number = 1
-            return sfmt("%1 bed, %2 bathroom", m_listing.bedroom_number, m_listing.bathroom_number)
+            return sfmt("%1 bed, %2 bathroom", m_listing.bedroom_number  using "<<", m_listing.bathroom_number  using "<<")
         when m_listing.bedroom_number > 1
-            return sfmt("%1 bedrooms", m_listing.bedroom_number)
+            return sfmt("%1 bedrooms", m_listing.bedroom_number  using "<<")
         when m_listing.bedroom_number = 1
             return "1 bedroom"
         when m_listing.bathroom_number > 1
-            return sfmt("%1 bathrooms", m_listing.bathroom_number)
+            return sfmt("%1 bathrooms", m_listing.bathroom_number  using "<<")
         when m_listing.bathroom_number = 1
             return "1 bathroom"
         otherwise

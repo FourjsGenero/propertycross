@@ -15,7 +15,8 @@ DEFINE i INTEGER
     OPEN WINDOW searchresults WITH FORM "searchresults"
     LET w = ui.Window.getCurrent()
     LET f = w.getForm()
-    
+
+    call arr.clear()
     FOR i = 1 TO nestoria.m_location.response.listings.getLength()
         let arr[i].major = nestoria.m_location.response.listings[i].price_formatted
         let arr[i].minor = nestoria.m_location.response.listings[i].summary

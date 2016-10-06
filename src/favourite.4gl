@@ -31,6 +31,7 @@ DEFINE i INTEGER
 END FUNCTION
 
 
+
 FUNCTION is_favourite(l_listing)
 DEFINE l_listing nestoria.listingType
 DEFINE i INTEGER
@@ -43,10 +44,12 @@ DEFINE i INTEGER
 END FUNCTION
 
 
+
 FUNCTION get(i)
 DEFINE i INTEGER
     RETURN favourite_arr[i].*
 END FUNCTION
+
 
 
 FUNCTION count()
