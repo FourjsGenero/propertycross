@@ -1,0 +1,36 @@
+LAYOUT (TEXT=%"window.searchresults.title")
+
+STACK
+GROUP grpheading
+TABLE scr
+EDIT formonly.major, IMAGECOLUMN=img;
+EDIT formonly.minor;
+PHANTOM formonly.img;
+END
+END
+GROUP
+BUTTON load;
+END
+END
+
+
+--VBOX 
+--TABLE
+--{
+--[f01      |f02           ]
+--}
+--END
+--GRID
+--{
+--[b01        ]
+--}
+--END
+--END
+--END
+--ATTRIBUTES
+--f01 = formonly.major, IMAGECOLUMN=img;
+--f02 = formonly.minor;
+--PHANTOM formonly.img;
+--BUTTON b01: load;
+--INSTRUCTIONS
+--SCREEN RECORD scr(major, minor, img);

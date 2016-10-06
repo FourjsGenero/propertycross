@@ -1,0 +1,59 @@
+LAYOUT (TEXT=%"window.propertysearch.title")
+VBOX
+GRID 
+{
+[f01              ]
+[                 ]
+[f02              ]
+[b01     |b02     ]
+}
+END
+
+GROUP grprecentsearch (TEXT=%"Recent Searches")
+TABLE 
+{
+[s01              ]
+}
+END #TABLE
+END #GROUP
+
+GROUP grperror (TEXT="Error")
+GRID
+{
+[e01              ]
+[                 ]
+}
+END
+END
+
+GROUP grplocationlist (TEXT=%"Please select a location below")
+TABLE 
+{
+[l01              ]
+}
+END #TABLE
+END #GROUP
+END #VBOX
+END #LAYOUT
+ATTRIBUTES
+TEXTEDIT f01 = formonly.instruction;
+EDIT f02 = formonly.search;
+BUTTON b01: go;
+BUTTON b02: my_location;
+
+
+EDIT s01 = formonly.search_result;
+PHANTOM formonly.search_url;
+TEXTEDIT e01 = formonly.error_text;
+
+PHANTOM formonly.center_lat;
+PHANTOM formonly.center_lon;
+EDIT l01 = formonly.long_title;
+PHANTOM formonly.place_name;
+PHANTOM formonly.title;
+
+
+
+INSTRUCTIONS
+SCREEN RECORD search_scr (search_result, search_url);
+SCREEN RECORD location_scr(center_lat,center_lon,long_title,place_name,title);
