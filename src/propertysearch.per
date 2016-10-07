@@ -1,4 +1,6 @@
 LAYOUT (TEXT=%"window.propertysearch.title")
+
+-- Syntax not using STACK
 VBOX
 GRID 
 {
@@ -9,7 +11,7 @@ GRID
 }
 END
 
-GROUP grprecentsearch (TEXT=%"Recent Searches")
+GROUP grprecentsearch (TEXT=%"Recent Searches:")
 TABLE 
 {
 [s01              ]
@@ -17,7 +19,7 @@ TABLE
 END #TABLE
 END #GROUP
 
-GROUP grperror (TEXT="Error")
+GROUP grperror 
 GRID
 {
 [e01              ]
@@ -26,7 +28,7 @@ GRID
 END
 END
 
-GROUP grplocationlist (TEXT=%"Please select a location below")
+GROUP grplocationlist (TEXT=%"Please select a location below:")
 TABLE 
 {
 [l01              ]
@@ -37,13 +39,13 @@ END #VBOX
 END #LAYOUT
 ATTRIBUTES
 TEXTEDIT f01 = formonly.instruction;
-EDIT f02 = formonly.search;
+EDIT f02 = formonly.search, COMMENT=%"comment.search";
 BUTTON b01: go;
 BUTTON b02: my_location;
 
+EDIT s01 = formonly.result;
+PHANTOM formonly.url;
 
-EDIT s01 = formonly.search_result;
-PHANTOM formonly.search_url;
 TEXTEDIT e01 = formonly.error_text;
 
 PHANTOM formonly.center_lat;
@@ -52,8 +54,37 @@ EDIT l01 = formonly.long_title;
 PHANTOM formonly.place_name;
 PHANTOM formonly.title;
 
-
-
 INSTRUCTIONS
-SCREEN RECORD search_scr (search_result, search_url);
+SCREEN RECORD search_scr (result, url);
 SCREEN RECORD location_scr(center_lat,center_lon,long_title,place_name,title);
+
+
+--STACK
+--GROUP
+--TEXTEDIT formonly.instruction, HEIGHT=4;
+--EDIT formonly.search, TITLE="Search";
+--BUTTON go;
+--BUTTON my_location;
+--END
+--
+--GROUP grprecentsearch (TEXT=%"Recent Searches")
+--TABLE search_scr
+--EDIT formonly.search_result;
+--PHANTOM formonly.search_url;
+--END
+--END
+--
+--GROUP grperror (TEXT="Error")
+--TEXTEDIT formonly.error_text;
+--END
+--
+--GROUP grplocationlist (TEXT=%"Please select a location below")
+--TABLE location_scr
+--PHANTOM formonly.center_lat;
+--PHANTOM formonly.center_lon;
+--EDIT formonly.long_title;
+--PHANTOM formonly.place_name;
+--PHANTOM formonly.title;
+--END
+--END
+--END

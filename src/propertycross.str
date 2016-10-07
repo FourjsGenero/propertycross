@@ -4,3 +4,12 @@
 "window.propertylisting.title" = "Property Details"
 "window.searchresults.title" = "Search Results"
 "window.favouriteslisting.title" = "Favourites"
+
+"comment.search" = "Enter place-name or postcode"
+
+"menu.comment.nofavourites" ="You have not added any properties to your favourites"
+
+"error.zeroproperties" = "Zero properties returned"
+
+"popup.heading.error" = "Error"
+"popup.heading.info" = "Info"

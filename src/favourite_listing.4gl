@@ -1,46 +1,45 @@
-IMPORT FGL favourite
-IMPORT FGL propertylisting
-IMPORT FGL nestoria
+import fgl favourite
+import fgl propertylisting
+import fgl nestoria
 
-DEFINE arr DYNAMIC ARRAY OF RECORD
-    major, minor, img STRING
-END RECORD
+define arr dynamic array of record
+    major, minor, img string
+end record
 
-FUNCTION execute()
-DEFINE i INTEGER
+function execute()
+define i integer
+define l_listing nestoria.listingtype
 
+    open window favourites with form "favourite_listing"
 
-DEFINE l_listing nestoria.listingType
+    call populate()
 
-    OPEN WINDOW favourites WITH FORM "favourite_listing"
-
-    CALL populate()
-
-    IF arr.getLength() = 0 THEN
-        MENU "" ATTRIBUTES(STYLE="dialog", COMMENT="You have not added any properties to your favourites")
-            ON ACTION accept
-                EXIT MENU
-        END MENU
-    ELSE
-        DISPLAY ARRAY arr TO scr.* ATTRIBUTES(ACCEPT=FALSE, DOUBLECLICK=select)
-            ON ACTION select
-                CALL favourite.get(arr_curr()) RETURNING l_listing.*
-                CALL propertylisting.execute(l_listing.*)
-                CALL populate()
-        END DISPLAY
-    END IF
-    CLOSE WINDOW favourites
-END FUNCTION
+    if arr.getlength() = 0 then
+        menu "" attributes(style="dialog", comment=%"menu.comment.nofavourites")
+            on action accept
+                exit menu
+        end menu
+    else
+        display array arr to scr.* attributes(accept=false, doubleclick=select)
+            on action select
+                call favourite.get(arr_curr()) returning l_listing.*
+                call propertylisting.execute(l_listing.*)
+                call populate()
+        end display
+    end if
+    close window favourites
+end function
 
 
-FUNCTION populate()
-DEFINE i INTEGER
-DEFINE l_listing nestoria.listingType
 
-    FOR i = 1 To favourite.count()
-        CALL favourite.get(i) RETURNING l_listing.*
+private function populate()
+define i integer
+define l_listing nestoria.listingtype
+
+    for i = 1 to favourite.count()
+        call favourite.get(i) returning l_listing.*
         let arr[i].major = l_listing.price_formatted
         let arr[i].minor = l_listing.summary
         let arr[i].img = l_listing.thumb_url
-    END FOR
-END FUNCTION
+    end for
+end function

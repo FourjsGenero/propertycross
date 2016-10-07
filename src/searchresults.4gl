@@ -1,46 +1,63 @@
-IMPORT FGL nestoria
+import fgl nestoria
 import fgl propertylisting
 
-DEFINE arr DYNAMIC ARRAY OF RECORD
-    major, minor, img STRING
-END RECORD
-DEFINE w ui.Window
-define f ui.Form
+define arr dynamic array of record
+    major, minor, img string
+end record
+define w ui.window
+define f ui.form
 
 
 
-FUNCTION execute()
-DEFINE i INTEGER
+function execute()
+define i integer
+define l_result,l_error_text string
 
-    OPEN WINDOW searchresults WITH FORM "searchresults"
-    LET w = ui.Window.getCurrent()
-    LET f = w.getForm()
+    open window searchresults with form "searchresults"
+    let w = ui.window.getcurrent()
+    let f = w.getform()
 
     call arr.clear()
-    FOR i = 1 TO nestoria.m_location.response.listings.getLength()
-        let arr[i].major = nestoria.m_location.response.listings[i].price_formatted
-        let arr[i].minor = nestoria.m_location.response.listings[i].summary
-        let arr[i].img = nestoria.m_location.response.listings[i].thumb_url
-    end for
-    DISPLAY ARRAY arr TO scr.* ATTRIBUTES(ACCEPT=FALSE, DOUBLECLICK=select)
-        BEFORE DISPLAY
-            call state(DIALOG)
-        ON ACTION select
-            call propertylisting.execute(nestoria.m_location.response.listings[arr_curr()].*)
+    call populate()
+    
+    display array arr to scr.* attributes(accept=false, doubleclick=select)
+        before display
+            call state(dialog)
+            
+        on action select
+            call propertylisting.execute(nestoria.listing_arr[arr_curr()].*)
+            call state(dialog)
 
         on action load
+            call nestoria.next_page() returning l_result, l_error_text
+            if l_result = "ok" then
+                call populate()
+            else
+                call fgl_winmessage(%"popup.heading.error", l_error_text,"")
+            end if
             call state(dialog)
-    END DISPLAY
+    end display
 
-    CLOSE WINDOW searchresults
+    close window searchresults
 
-END FUNCTION
+end function
 
 
 
-PRIVATE FUNCTION state(d)
+private function populate()
+define i integer
+    for i = 1 to nestoria.listing_arr.getlength()
+        let arr[i].major = nestoria.listing_arr[i].price_formatted
+        let arr[i].minor = nestoria.listing_arr[i].summary
+        let arr[i].img = nestoria.listing_arr[i].thumb_url
+    end for
+
+end function
+
+
+
+private function state(d)
 define d ui.dialog
-    call f.setElementText("grpheading", sfmt("%1 of %2 matches", arr.getLength() USING "<<<&", nestoria.m_location.response.total_results USING "<<<&"))
-    #CALL w.setText(sfmt("%1 of %2 matches", arr.getLength() USING "<<<&", nestoria.m_location.response.total_results USING "<<<&"))
-    CALL d.setActionActive("load", nestoria.m_location.response.total_results > arr.getLength())
+    call w.setText(sfmt("%1 of %2 matches", arr.getlength() using "<<<&", nestoria.listing_total using "<<<&"))
+    call d.setactionactive("load", nestoria.listing_total > arr.getlength())
 end function

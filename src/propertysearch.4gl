@@ -1,96 +1,108 @@
-IMPORT FGL nestoria
-IMPORT FGL searchresults
+import fgl nestoria
+import fgl searchresults
 import fgl favourite_listing
 
 
-DEFINE m_state STRING
-DEFINE w ui.Window
-DEFINE f ui.Form
+define m_state string
+define w ui.window
+define f ui.form
 
-FUNCTION execute()
+define recent_arr dynamic array of record
+    text string,
+    url string
+end record
 
-DEFINE search STRING
-DEFINE search_arr DYNAMIC ARRAY OF RECORD
-    search_result STRING,
-    search_url STRING
-END RECORD
-DEFINE location_arr DYNAMIC ARRAY OF nestoria.locationType
-DEFINE l_ok BOOLEAN
-DEFINE l_error_text STRING
-DEFINE i INTEGER
 
-    LET m_state = "initial"
+function execute()
+define search string
 
-    OPEN WINDOW propertysearch WITH FORM "propertysearch"
-    LET w = ui.Window.getCurrent()
-    LET f = w.getForm()
+define location_arr dynamic array of nestoria.locationtype
+define l_result string
+define l_error_text string
+define i integer
 
-    DISPLAY %"propertysearch.instruction.text" TO instruction
+    let m_state = "initial"
 
-    DIALOG ATTRIBUTES(UNBUFFERED) 
-        INPUT BY NAME search 
+    open window propertysearch with form "propertysearch"
+    let w = ui.window.getcurrent()
+    let f = w.getform()
+
+    display %"propertysearch.instruction.text" to instruction
+
+    dialog attributes(unbuffered) 
+        input by name search 
+        end input
+
+        display array recent_arr to search_scr.*  attributes(accessorytype=disclosureindicator, doubleclick=select)
+            on action select
+                call nestoria.search(recent_arr[arr_curr()].url) returning l_result, l_error_text
+                goto lbl_go
+        end display
+
+        display array location_arr to location_scr.* attributes(accessorytype=disclosureindicator, doubleclick=select)
+            on action select
+        end display
+
+        before dialog
+            call state(dialog)
         
-        END INPUT
-
-        DISPLAY ARRAY search_arr TO search_scr.* 
-            ON ACTION select
-        END DISPLAY
-
-        DISPLAY ARRAY location_arr TO location_scr.*
-            ON ACTION select
-        END DISPLAY
-
-        BEFORE DIALOG
-            CALL state(DIALOG)
-        
-        ON ACTION go
-
-            call nestoria.search(search,1) returning l_ok, l_error_text
+        on action go
+            call nestoria.search(search) returning l_result, l_error_text
+            
         label lbl_go:
             case
-                when nestoria.m_location.response.application_response_code = "200" 
-                or nestoria.m_location.response.application_response_code = "202" 
-                    if nestoria.m_location.response.locations.getLength() > 0 then
-                        let m_state = "location"
-                        call location_arr.clear()
-                        for i = 1 to nestoria.m_location.response.locations.getLength()
-                            let location_arr[i].* = nestoria.m_location.response.locations[i].*
-                        end for
-                        call state(DIALOG)
-                    else
-                        let m_state = "error"
-                        display "Zero properties returned" to error_text
-                    end if
-                when nestoria.m_location.response.application_response_code = "100" 
-                or nestoria.m_location.response.application_response_code = "101" 
-                or nestoria.m_location.response.application_response_code = "110" 
-                    if nestoria.m_location.response.listings.getLength() >0 then
-                        call searchresults.execute()
-                        let m_state = "initial"
-                    else
-                        let m_state = "error"
-                        display "Zero properties returned" to error_text
-                    end if
+                when l_result = "error"
+                    let m_state = "error"
+                    display l_error_text to error_text
+                    
+                when l_result = "zero"
+                    let m_state = "error"
+                    display %"error.zeroproperties" to error_text
+                    
+                when l_result = "location"
+                    let m_state = "location"
+                    call location_arr.clear()
+                    for i = 1 to nestoria.location_arr.getlength()
+                        let location_arr[i].* = nestoria.location_arr[i].*
+                    end for
+                    call state(dialog)
+
+                when l_result = "ok"
+                    call searchresults.execute()
+                    call populate_recent()
+                    let m_state = "initial"
             end case
             call state(dialog)
             
-        ON ACTION my_location
-            call nestoria.latlong(1) returning l_ok, l_error_text
-            GOTO lbl_go
+        on action my_location
+            call nestoria.latlong() returning l_result, l_error_text
+            goto lbl_go
 
-        ON ACTION favourite
+        on action favourite
             call favourite_listing.execute()
-    END DIALOG
-    CLOSE WINDOW propertysearch
+    end dialog
+    close window propertysearch
 
-END FUNCTION
+end function
 
 
 
-PRIVATE FUNCTION state(d)
-DEFINE d ui.Dialog
+private function state(d)
+define d ui.dialog
 
-    CALL f.setElementHidden("grprecentsearch", m_state != "initial")
-    CALL f.setElementHidden("grperror", m_state != "error")
-    CALL f.setElementHidden("grplocationlist", m_state != "location")
-END FUNCTION
+    call f.setelementhidden("grprecentsearch", m_state != "initial")
+    call f.setelementhidden("grperror", m_state != "error")
+    call f.setelementhidden("grplocationlist", m_state != "location")
+end function
+
+
+
+private function populate_recent()
+define i integer
+
+    call recent_arr.clear()
+    for i = 1 to nestoria.recent_arr.getLength()
+        let recent_arr[i].text = sfmt("%1 (%2)", nestoria.recent_arr[i].text, nestoria.recent_arr[i].count)
+        let recent_arr[i].url = nestoria.recent_arr[i].url
+    end for
+end function

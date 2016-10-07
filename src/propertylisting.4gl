@@ -1,44 +1,52 @@
 import fgl nestoria
 import fgl favourite
 
-define m_listing nestoria.listingType
+define m_listing nestoria.listingtype
 
-FUNCTION execute(l_listing)
-define l_listing nestoria.listingType
+
+
+function execute(l_listing)
+define l_listing nestoria.listingtype
 
     let m_listing.* = l_listing.*
     
     open window propertylisting with form "propertylisting"
 
-    display m_listing.price_formatted TO price
-    display shorten_title() TO location
-    display m_listing.img_url TO img
-    display bed_and_bath() TO detail
-    display m_listing.summary TO summary
+    display l_listing.price_formatted to price
+    display shorten_title() to location
+    display l_listing.img_url to img
+    display bed_and_bath() to detail
+    display l_listing.summary to summary
+    
     menu ""
         before menu
-            call state(DIALOG)
+            call state(dialog)
+            
         on action cancel
             exit menu
+            
         on action favourite_add
-            call favourite.add(m_listing.*)
-            call state(DIALOG)
+            call favourite.add(l_listing.*)
+            call state(dialog)
 
         on action favourite_remove
-            call favourite.remove(m_listing.*)
-            call state(DIALOG)
+            call favourite.remove(l_listing.*)
+            call state(dialog)
     end menu
+    
     close window propertylisting
 end function
 
+
+
 private function state(d)
-define d ui.Dialog
+define d ui.dialog
 define is_favourite boolean
 
     let is_favourite = favourite.is_favourite(m_listing.*)
     
-    call d.setActionActive("favourite_remove", is_favourite)
-    call d.setActionActive("favourite_add", NOT is_favourite)
+    call d.setactionactive("favourite_remove", is_favourite)
+    call d.setactionactive("favourite_add", not is_favourite)
 end function
 
 
@@ -46,11 +54,11 @@ end function
 private function shorten_title()
 define l_pos integer
 
-    let l_pos = m_listing.title.getIndexOf(",",1)
+    let l_pos = m_listing.title.getindexof(",",1)
     if l_pos > 0 then
-        let l_pos = m_listing.title.getIndexOf(",",l_pos+1)
+        let l_pos = m_listing.title.getindexof(",",l_pos+1)
         if l_pos > 0 then
-            return m_listing.title.subString(1, l_pos)
+            return m_listing.title.substring(1, l_pos)
         end if
     end if
     return m_listing.title

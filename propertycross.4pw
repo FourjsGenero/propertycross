@@ -119,18 +119,22 @@
     </Library>
     <Library binaryName="Entities" id="212784684" label="Entities"/>
     <Application binaryName="propertycross" dependencies="159917928||212784684||362164715||455109296" environment="dirlist:FGLIMAGEPATH=$(ProjectDir)/images;$(FGLDIR)/lib/image2font.txt;$(FGLIMAGEPATH)" id="400358049" label="propertycross">
-      <File excludeFromLink="true" filePath="src/favourite.4gl"/>
-      <File excludeFromLink="true" filePath="src/favourite_listing.4gl"/>
-      <File filePath="src/favourite_listing.per"/>
+      <VirtualFolder label="business_rules">
+        <File excludeFromLink="true" filePath="src/favourite.4gl"/>
+        <File excludeFromLink="true" filePath="src/nestoria.4gl"/>
+      </VirtualFolder>
+      <VirtualFolder label="user_interface">
+        <File excludeFromLink="true" filePath="src/favourite_listing.4gl"/>
+        <File filePath="src/favourite_listing.per"/>
+        <File excludeFromLink="true" filePath="src/propertylisting.4gl"/>
+        <File filePath="src/propertylisting.per"/>
+        <File excludeFromLink="true" filePath="src/propertysearch.4gl"/>
+        <File filePath="src/propertysearch.per"/>
+        <File filePath="src/searchresults.4gl"/>
+        <File filePath="src/searchresults.per"/>
+      </VirtualFolder>
       <File filePath="src/main.4gl"/>
-      <File excludeFromLink="true" filePath="src/nestoria.4gl"/>
       <File filePath="src/propertycross.str"/>
-      <File excludeFromLink="true" filePath="src/propertylisting.4gl"/>
-      <File filePath="src/propertylisting.per"/>
-      <File excludeFromLink="true" filePath="src/propertysearch.4gl"/>
-      <File filePath="src/propertysearch.per"/>
-      <File filePath="src/searchresults.4gl"/>
-      <File filePath="src/searchresults.per"/>
     </Application>
     <Library binaryName="Resources" id="159917928" label="Resources">
       <File filePath="resources/propertycross.4ad"/>
