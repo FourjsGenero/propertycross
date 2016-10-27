@@ -27,6 +27,8 @@ define i integer
     let w = ui.window.getcurrent()
     let f = w.getform()
 
+        #call nestoria.init()
+        #call populate_recent()
     display %"propertysearch.instruction.text" to instruction
 
     dialog attributes(unbuffered) 
@@ -35,12 +37,14 @@ define i integer
 
         display array recent_arr to search_scr.*  attributes(accessorytype=disclosureindicator, doubleclick=select)
             on action select
+                #message "Here", arr_curr()
                 call nestoria.search(recent_arr[arr_curr()].url) returning l_result, l_error_text
                 goto lbl_go
         end display
 
         display array location_arr to location_scr.* attributes(accessorytype=disclosureindicator, doubleclick=select)
             on action select
+                # TODO add CALL here
         end display
 
         before dialog
@@ -104,5 +108,6 @@ define i integer
     for i = 1 to nestoria.recent_arr.getLength()
         let recent_arr[i].text = sfmt("%1 (%2)", nestoria.recent_arr[i].text, nestoria.recent_arr[i].count)
         let recent_arr[i].url = nestoria.recent_arr[i].url
+        display recent_arr[i].url
     end for
 end function

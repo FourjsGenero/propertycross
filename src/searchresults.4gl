@@ -20,11 +20,14 @@ define l_result,l_error_text string
     call arr.clear()
     call populate()
     
-    display array arr to scr.* attributes(accept=false, doubleclick=select)
+    display array arr to scr.* attributes(accept=false, doubleclick=select, ACCESSORYTYPE=disclosureindicator)
         before display
             call state(dialog)
             
         on action select
+            # Bypasses the system call that sets the back button to the window title
+            #call w.setText("Back")
+            
             call propertylisting.execute(nestoria.listing_arr[arr_curr()].*)
             call state(dialog)
 
@@ -58,6 +61,8 @@ end function
 
 private function state(d)
 define d ui.dialog
-    call w.setText(sfmt("%1 of %2 matches", arr.getlength() using "<<<&", nestoria.listing_total using "<<<&"))
+    #call w.setText(sfmt("%1 of %2 matches", arr.getlength() using "<<<&", nestoria.listing_total using "<<<&"))
+call f.setElementText("g1",sfmt("%1 of %2 matches", arr.getlength() using "<<<&", nestoria.listing_total using "<<<&"))
+    
     call d.setactionactive("load", nestoria.listing_total > arr.getlength())
 end function

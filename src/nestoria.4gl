@@ -99,6 +99,14 @@ PUBLIC DEFINE location_arr DYNAMIC ARRAY OF locationType
 PUBLIC DEFINE listing_arr DYNAMIC ARRAY OF listingType
 PUBLIC DEFINE listing_total INTEGER
 
+function init()
+     let recent_arr[1].text="Leeds"
+    let recent_arr[1].url = "leeds"
+
+     let recent_arr[2].text="Teddington"
+    let recent_arr[2].url = "teddington"
+end function
+
 
 FUNCTION search(l_search)
 DEFINE l_search STRING
@@ -150,6 +158,7 @@ define l_response nestoriaResponseType
                 let recent_arr[1].text = l_response.response.locations[1].long_title
                 let recent_arr[1].url = l_response.response.locations[1].place_name
                 let recent_arr[1].count = l_response.response.total_results
+                call trim_recent()
                 return "ok", ""
             else
                 return "zero", ""
@@ -233,6 +242,7 @@ define i integer
                     let recent_arr[1].text = l_response.response.locations[1].long_title
                     let recent_arr[1].url = l_response.response.locations[1].place_name
                     let recent_arr[1].count = l_response.response.total_results
+                    call trim_recent()
                     return "ok", ""
                 else
                     return "zero", ""
@@ -309,3 +319,13 @@ display l_url
     end if
     return "error", l_response.response.application_response_text
 END FUNCTION
+
+PRIVATE FUNCTION trim_recent()
+DEFINE i integer
+
+    for i = recent_arr.getLength() TO 2 STEP -1
+        if recent_arr[i].url = recent_arr[1].url then
+            call recent_arr.deleteElement(i)
+        end if
+    end for
+end function

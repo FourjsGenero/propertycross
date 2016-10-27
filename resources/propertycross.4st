@@ -68,4 +68,7 @@
      <StyleAttribute name="toolBarPosition" value="none" />
      <StyleAttribute name="statusBarType" value="none" />
   </Style>
+  <Style name="TextEdit">
+     <StyleAttribute name="border" value="none" />
+    </Style>
 </StyleList>
