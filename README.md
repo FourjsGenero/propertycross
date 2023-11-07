@@ -5,3 +5,5 @@ The PropertyCross project is in maintenance mode https://github.com/tastejs/Prop
 This application is based on the PropertyCross reqiuirements that are used to showcase different mobile development frameworks.
 
 More information can be found here http://propertycross.com/ and the specifications here https://github.com/tastejs/PropertyCross/tree/master/specification
+
+    (Small change to update language associated with repository)
